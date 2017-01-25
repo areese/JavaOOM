@@ -1,5 +1,6 @@
 import java.io.Closeable;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,59 +70,73 @@ public class JavaOOM {
         }
     }
 
+    static final class ByteBuffers implements Holder<ByteBuffer> {
+        List<ByteBuffer> list = new LinkedList<>();
+        long size = 0;
 
-    public static void main(String[] args) {
-        int bytesize = 0;
-        int unsafeSize = 0;
+        @Override
+        public void close() throws IOException {
+            list.clear();
+        }
+
+        @Override
+        public void add(ByteBuffer v) {
+            size += v.capacity();
+            list.add(v);
+        }
+
+        @Override
+        public long size() {
+            return size;
+        }
+    }
+
+
+    public static void main(String[] argv) {
         long totalSize = 0;
         long currentSize = 0;
-        long heapmax = 0;
-        long unsafemax = 0;
-        int printCount=100;
-
         printHeap(currentSize, totalSize);
 
-        if (args.length < 4) {
-            System.err.println("Need at least 4 args");
-            System.exit(-1);
-        }
+        Args args = new Args(argv);
 
+        System.out.println(args);
         int i = 0;
-        bytesize = Integer.parseInt(args[i++]);
-        unsafeSize = Integer.parseInt(args[i++]);
-        heapmax = Integer.parseInt(args[i++]) * MB;
-        unsafemax = Integer.parseInt(args[i++]) * MB;
-        totalSize = heapmax + unsafemax;
+        totalSize = args.maxheapusage + args.maxunsafeusage;
 
-        if (i < args.length) {
-            printCount = Integer.parseInt(args[i++]);
-        }
-
-        System.out.println("Starting, allocating " + bytesize + " sized byte buffers  up to " + mb(heapmax) + " and "
-                        + unsafeSize + " unsafe buffers up to " + mb(unsafemax) + " for a total of " + mb(totalSize));
+        System.out.println("Starting, allocating " + args.bytesize + " sized byte buffers  up to "
+                        + Args.mb(args.maxheapusage) + " and " + args.unsafeSize + " unsafe buffers up to "
+                        + Args.mb(args.maxunsafeusage) + " for a total of " + Args.mb(totalSize));
 
         Bytes b = new Bytes();
         Unsafes u = new Unsafes();
+        ByteBuffers bb = new ByteBuffers();
 
         i = 0;
         while (currentSize < totalSize) {
             boolean added = false;
             i++;
-            if (b.size() < heapmax) {
-                byte[] n = new byte[bytesize];
+            if (b.size() < args.maxheapusage) {
+                byte[] n = new byte[args.bytesize];
                 b.add(n);
-                currentSize += bytesize;
+                currentSize += args.bytesize;
                 added = true;
             }
 
-            if (u.size() < unsafemax) {
-                MissingFingers m = new MissingFingers(unsafeSize);
+            if (u.size() < args.maxunsafeusage) {
+                MissingFingers m = new MissingFingers(args.unsafeSize);
                 u.add(m);
-                currentSize += unsafeSize;
+                currentSize += args.unsafeSize;
                 added = true;
             }
 
-            if (i % printCount == 0) {
+            if (bb.size() < args.maxbytebufferusage) {
+                ByteBuffer m = ByteBuffer.allocateDirect((int) args.byteBufferSize);
+                bb.add(m);
+                currentSize += args.byteBufferSize;
+                added = true;
+            }
+
+            if (args.printAt > 0 && i % args.printAt == 0) {
                 printHeap(currentSize, totalSize);
             }
 
