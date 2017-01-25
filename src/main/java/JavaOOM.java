@@ -77,11 +77,12 @@ public class JavaOOM {
         long currentSize = 0;
         long heapmax = 0;
         long unsafemax = 0;
+        int printCount=100;
 
         printHeap(currentSize, totalSize);
 
-        if (args.length < 3) {
-            System.err.println("Need 3 args");
+        if (args.length < 4) {
+            System.err.println("Need at least 4 args");
             System.exit(-1);
         }
 
@@ -91,6 +92,10 @@ public class JavaOOM {
         heapmax = Integer.parseInt(args[i++]) * MB;
         unsafemax = Integer.parseInt(args[i++]) * MB;
         totalSize = heapmax + unsafemax;
+
+        if (i < args.length) {
+            printCount = Integer.parseInt(args[i++]);
+        }
 
         System.out.println("Starting, allocating " + bytesize + " sized byte buffers  up to " + mb(heapmax) + " and "
                         + unsafeSize + " unsafe buffers up to " + mb(unsafemax) + " for a total of " + mb(totalSize));
@@ -116,7 +121,7 @@ public class JavaOOM {
                 added = true;
             }
 
-            if (i % 10 == 0) {
+            if (i % printCount == 0) {
                 printHeap(currentSize, totalSize);
             }
 
