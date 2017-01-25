@@ -115,21 +115,21 @@ public class JavaOOM {
         while (currentSize < totalSize) {
             boolean added = false;
             i++;
-            if (b.size() < args.maxheapusage) {
+            if (args.bytesize > 0 && b.size() < args.maxheapusage) {
                 byte[] n = new byte[args.bytesize];
                 b.add(n);
                 currentSize += args.bytesize;
                 added = true;
             }
 
-            if (u.size() < args.maxunsafeusage) {
+            if (args.unsafeSize > 0 && u.size() < args.maxunsafeusage) {
                 MissingFingers m = new MissingFingers(args.unsafeSize);
                 u.add(m);
                 currentSize += args.unsafeSize;
                 added = true;
             }
 
-            if (bb.size() < args.maxbytebufferusage) {
+            if (args.byteBufferSize > 0 && bb.size() < args.maxbytebufferusage) {
                 ByteBuffer m = ByteBuffer.allocateDirect((int) args.byteBufferSize);
                 bb.add(m);
                 currentSize += args.byteBufferSize;
