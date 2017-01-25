@@ -38,7 +38,8 @@ public class Args {
                     unsafeSize = Integer.parseInt(args[i++]);
                     break;
 
-                case "-printAt":
+                case "-print":
+                case "-printat":
                     printAt = Integer.parseInt(args[i++]);
                     break;
 
