@@ -136,7 +136,7 @@ public class JavaOOM {
                 added = true;
             }
 
-            if (args.printAt > 0 && i % args.printAt == 0) {
+            if (args.debug || (args.printAt > 0 && i % args.printAt == 0)) {
                 printHeap(currentSize, totalSize);
             }
 
@@ -145,6 +145,7 @@ public class JavaOOM {
             }
         }
 
+        System.out.println("Done after " + i + " iterations");
 
     }
 
