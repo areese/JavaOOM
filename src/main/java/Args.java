@@ -4,7 +4,7 @@ public class Args {
     public static final int KB = 1024;
     public static final int MB = 1024 * KB;
 
-    public int bytesize = 1000;
+    public int byteSize = 1000;
     public int unsafeSize = 0;
     public long totalSize = 0;
     public long byteBufferSize = 0;
@@ -22,17 +22,19 @@ public class Args {
         for (int i = 0; i < args.length;) {
             String arg = args[i++];
 
-            switch (arg) {
+            switch (arg.toLowerCase()) {
                 case "-d":
                 case "-debug":
                     debug = true;
                     break;
 
                 case "-bytes":
-                    bytesize = Integer.parseInt(args[i++]);
+                case "-bytesize":
+                    byteSize = Integer.parseInt(args[i++]);
                     break;
 
                 case "-unsafe":
+                case "-unsafesize":
                     unsafeSize = Integer.parseInt(args[i++]);
                     break;
 
@@ -41,6 +43,7 @@ public class Args {
                     break;
 
                 case "-bytebuffer":
+                case "-bytebuffersize":
                     byteBufferSize = Integer.parseInt(args[i++]);
                     break;
 
@@ -71,7 +74,7 @@ public class Args {
 
     @Override
     public String toString() {
-        return "Args [bytesize=" + bytesize + ", unsafeSize=" + unsafeSize + ", totalSize=" + totalSize
+        return "Args [bytesize=" + byteSize + ", unsafeSize=" + unsafeSize + ", totalSize=" + totalSize
                         + ", byteBufferSize=" + byteBufferSize + ", printAt=" + printAt + ", debug=" + debug
                         + ", maxheapusage=" + mb(maxheapusage) + "MB, maxunsafeusage=" + mb(maxunsafeusage)
                         + "MB, maxbytebufferusage=" + mb(maxbytebufferusage) + "MB]";

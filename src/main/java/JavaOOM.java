@@ -103,7 +103,7 @@ public class JavaOOM {
         int i = 0;
         totalSize = args.maxheapusage + args.maxunsafeusage;
 
-        System.out.println("Starting, allocating " + args.bytesize + " sized byte buffers  up to "
+        System.out.println("Starting, allocating " + args.byteSize + " sized byte buffers  up to "
                         + Args.mb(args.maxheapusage) + " and " + args.unsafeSize + " unsafe buffers up to "
                         + Args.mb(args.maxunsafeusage) + " for a total of " + Args.mb(totalSize));
 
@@ -115,10 +115,10 @@ public class JavaOOM {
         while (currentSize < totalSize) {
             boolean added = false;
             i++;
-            if (args.bytesize > 0 && b.size() < args.maxheapusage) {
-                byte[] n = new byte[args.bytesize];
+            if (args.byteSize > 0 && b.size() < args.maxheapusage) {
+                byte[] n = new byte[args.byteSize];
                 b.add(n);
-                currentSize += args.bytesize;
+                currentSize += args.byteSize;
                 added = true;
             }
 
