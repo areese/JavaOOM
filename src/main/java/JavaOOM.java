@@ -154,7 +154,7 @@ public class JavaOOM {
     private static void printRuntimeInfo() {
         Runtime runtime = Runtime.getRuntime();
         System.out.println("Processors: " + runtime.availableProcessors());
-        System.out.println("Max Memory: " +mb(runtime.maxMemory());
+        System.out.println("Max Memory: " + mb(runtime.maxMemory()));
     }
 
     private static void printHeap(long currentSize, long totalSize) {
