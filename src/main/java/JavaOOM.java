@@ -103,6 +103,8 @@ public class JavaOOM {
         int i = 0;
         totalSize = args.maxheapusage + args.maxunsafeusage;
 
+        printRuntimeInfo();
+
         System.out.println("Starting, allocating " + args.byteSize + " sized byte buffers  up to "
                         + Args.mb(args.maxheapusage) + " and " + args.unsafeSize + " unsafe buffers up to "
                         + Args.mb(args.maxunsafeusage) + " for a total of " + Args.mb(totalSize));
@@ -149,6 +151,11 @@ public class JavaOOM {
 
     }
 
+    private static void printRuntimeInfo() {
+        Runtime runtime = Runtime.getRuntime();
+        System.out.println("Processors: " + runtime.availableProcessors());
+        System.out.println("Max Memory: " +mb(runtime.maxMemory());
+    }
 
     private static void printHeap(long currentSize, long totalSize) {
         long heapSize = Runtime.getRuntime().totalMemory();
